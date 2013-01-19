@@ -1,4 +1,3 @@
-module deimos.cairo.xcb;
 /* cairo - a vector graphics library with display and print output
  *
  * Copyright © 2002 University of Southern California
@@ -33,42 +32,87 @@ module deimos.cairo.xcb;
  * California.
  *
  * Contributor(s):
- *	Carl D. Worth <cworth@cworth.org>
- *	Chris Wilson <chris@chris-wilson.co.uk>
+ *      Carl D. Worth <cworth@cworth.org>
+ *      Chris Wilson <chris@chris-wilson.co.uk>
  */
+
+module deimos.cairo.xcb;
 
 import deimos.cairo.cairo;
 import deimos.cairo.features;
 
-static if (CairoHasXCBSurface) {
-    static assert(0, "XCB support to be implemented, requires deimos.xcb");
-    extern(System) {
-        cairo_surface_t * cairo_xcb_surface_create (xcb_connection_t *connection, xcb_drawable_t drawable, xcb_visualtype_t *visual, int width, int height);
+import interim.xcb.xcb;
+import interim.xcb.render;
 
-        cairo_surface_t * cairo_xcb_surface_create_for_bitmap (xcb_connection_t *connection, xcb_screen_t *screen, xcb_pixmap_t bitmap, int width, int height);
+static if (CairoHasXCBSurface)
+{
 
-        cairo_surface_t * cairo_xcb_surface_create_with_xrender_format (xcb_connection_t *connection, xcb_screen_t *screen, xcb_drawable_t drawable, xcb_render_pictforminfo_t *format, int width, int height);
+extern(System)
+{
 
-        void cairo_xcb_surface_set_size (cairo_surface_t *surface, int width, int height);
+cairo_surface_t *
+cairo_xcb_surface_create (xcb_connection_t  *connection,
+                          xcb_drawable_t     drawable,
+                          xcb_visualtype_t  *visual,
+                          int                width,
+                          int                height);
 
-        void cairo_xcb_surface_set_drawable (cairo_surface_t *surface, xcb_drawable_t drawable, int width, int height);
+cairo_surface_t *
+cairo_xcb_surface_create_for_bitmap (xcb_connection_t *connection,
+                                     xcb_screen_t     *screen,
+                                     xcb_pixmap_t      bitmap,
+                                     int               width,
+                                     int               height);
 
-        xcb_connection_t * cairo_xcb_device_get_connection (cairo_device_t *device);
+cairo_surface_t *
+cairo_xcb_surface_create_with_xrender_format (xcb_connection_t          *connection,
+                                              xcb_screen_t              *screen,
+                                              xcb_drawable_t             drawable,
+                                              xcb_render_pictforminfo_t *format,
+                                              int                        width,
+                                              int                        height);
 
-        /* debug interface */
+void
+cairo_xcb_surface_set_size (cairo_surface_t *surface,
+                            int              width,
+                            int              height);
 
-        void cairo_xcb_device_debug_cap_xshm_version (cairo_device_t *device, int major_version, int minor_version);
+void
+cairo_xcb_surface_set_drawable (cairo_surface_t *surface,
+                                xcb_drawable_t   drawable,
+                                int              width,
+                                int              height);
 
-        void cairo_xcb_device_debug_cap_xrender_version (cairo_device_t *device, int major_version, int minor_version);
+xcb_connection_t *
+cairo_xcb_device_get_connection (cairo_device_t *device);
 
-        /*
-         * @precision: -1 implies automatically choose based on antialiasing mode,
-         *            any other value overrides and sets the corresponding PolyMode.
-         */
-        void cairo_xcb_device_debug_set_precision (cairo_device_t *device, int precision);
+/* debug interface */
 
-        int cairo_xcb_device_debug_get_precision (cairo_device_t *device);
-    }
-} else {
-    static assert(0, "Cairo was not compiled with support for the XCB backend");
+void
+cairo_xcb_device_debug_cap_xshm_version (cairo_device_t *device,
+                                         int major_version,
+                                         int minor_version);
+
+void
+cairo_xcb_device_debug_cap_xrender_version (cairo_device_t *device,
+                                            int major_version,
+                                            int minor_version);
+
+/*
+ * @precision: -1 implies automatically choose based on antialiasing mode,
+ *            any other value overrides and sets the corresponding PolyMode.
+ */
+void
+cairo_xcb_device_debug_set_precision (cairo_device_t *device,
+                                      int precision);
+
+int
+cairo_xcb_device_debug_get_precision (cairo_device_t *device);
+
+}  // extern(System)
+
+}
+else
+{
+    static assert(0, "Cairo was not compiled with support for the xcb backend");
 }
